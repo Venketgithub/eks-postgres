@@ -1,0 +1,39 @@
+rakashs-MacBook-Pro:postgres prakash$ kubectl get nodes
+NAME                         STATUS   ROLES    AGE   VERSION
+ip-10-0-1-64.ec2.internal    Ready    <none>   29m   v1.29.8-eks-a737599
+ip-10-0-2-138.ec2.internal   Ready    <none>   29m   v1.29.8-eks-a737599
+ip-10-0-3-237.ec2.internal   Ready    <none>   29m   v1.29.8-eks-a737599
+Prakashs-MacBook-Pro:postgres prakash$ kubectl create -f pvc.yaml 
+persistentvolume/postgres-pv-volume created
+persistentvolumeclaim/postgres-pv-claim created
+Prakashs-MacBook-Pro:postgres prakash$ kubectl get pv
+NAME                 CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                       STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+postgres-pv-volume   1Gi        RWX            Retain           Bound    default/postgres-pv-claim   manual         <unset>                          28s
+Prakashs-MacBook-Pro:postgres prakash$ 
+Prakashs-MacBook-Pro:postgres prakash$ kubectl get pvc
+NAME                STATUS   VOLUME               CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+postgres-pv-claim   Bound    postgres-pv-volume   1Gi        RWX            manual         <unset>                 44s
+Prakashs-MacBook-Pro:postgres prakash$ kubectl create -f postgres-login-secret.yaml
+secret/mysecret created
+Prakashs-MacBook-Pro:postgres prakash$ kubectl create -f postgres-deployment.yaml 
+deployment.apps/postgres created
+Prakashs-MacBook-Pro:postgres prakash$ 
+Prakashs-MacBook-Pro:postgres prakash$ kubectl get deployments
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+postgres   1/1     1            1           10s
+Prakashs-MacBook-Pro:postgres prakash$ kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+postgres-84f959b445-mlm9g   1/1     Running   0          17s
+Prakashs-MacBook-Pro:postgres prakash$ 
+rakashs-MacBook-Pro:postgres prakash$ kubectl create -f postgres-service.yaml
+service/postgres created
+Prakashs-MacBook-Pro:postgres prakash$ 
+
+
+Prakashs-MacBook-Pro:postgres prakash$ kubectl exec -it postgres-84f959b445-mlm9g -- psql -h localhost -U postgres --password -p 5432 postgres
+Password: 
+psql (14.13)
+Type "help" for help.
+
+postgres=# 
+postgres=# 
